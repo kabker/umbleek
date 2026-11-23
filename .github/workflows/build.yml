@@ -1,0 +1,20 @@
+name: Build Umbleek ISO
+on:
+  workflow_dispatch:   # adds a "Run workflow" button in the Actions tab
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: debian:trixie
+      options: --privileged
+    steps:
+      - name: Install tools
+        run: apt-get update && apt-get install -y git ca-certificates
+      - uses: actions/checkout@v4
+      - name: Build ISO
+        run: chmod +x build-umbleek.sh && ./build-umbleek.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: umbleek-iso
+          path: umbleek/*.iso
